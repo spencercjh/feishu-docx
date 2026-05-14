@@ -22,11 +22,11 @@
 
 ---
 
-## 🆕 Recent Updates (v0.2.3)
+## 🆕 Recent Updates (v0.2.6)
 
-- Added `export-browser` for public docs and docs readable in your current browser session
-- Browser-based export now downloads images, attachments, whiteboards, and diagrams as local assets
-- Default `export` improves public-share asset fallback by warming the document page session first
+- Added Add-ons Block rendering support
+- Sheet export now handles rich-text cells instead of emitting Python list/dict strings
+- `export` / `export-wiki-space` now support `--sheet-value-mode` for display values or formulas
 
 ---
 
@@ -89,7 +89,7 @@ Copy this Skill to your agent project, and Claude can:
 | Feature                 | Description                                     |
 |-------------------------|-------------------------------------------------|
 | 📄 Document Export      | Docx → Markdown with formatting, images, tables |
-| 📊 Spreadsheet Export   | Sheet → Markdown tables                         |
+| 📊 Spreadsheet Export   | Sheet → Markdown tables, with rich-text cells and display/formula modes |
 | 📋 Bitable Export       | Multidimensional tables → Markdown              |
 | 📚 Wiki Export          | Auto-resolve wiki nodes                         |
 | 🗂️ Wiki Batch Export   | Recursively export entire wiki space with hierarchy |
@@ -115,8 +115,8 @@ This tool currently supports exporting the following Feishu/Lark document compon
 | **Layout**     | Columns, Callouts, Dividers                                    | ✅      | Fully Supported                          |
 | **Tables**     | Native Tables                                                  | ✅      | Export to Markdown/HTML                  |
 | **Media**      | Images, Drawing Boards                                         | ✅      | Drawing boards exported as images        |
-| **Embedded**   | Spreadsheets (Sheets), Bitable                                 | ✅      | **Text content only**                    |
-| **Special**    | Synced Blocks                                                  | ⚠️     | Original blocks within the same doc only |
+| **Embedded**   | Spreadsheets (Sheets), Bitable                                 | ✅      | Sheets support rich-text cells and display/formula modes |
+| **Special**    | Synced Blocks, Add-ons Blocks                                  | ⚠️     | Synced blocks support original blocks within the same doc only |
 | **Files**      | Attachments                                                    | ✅      | Local download when possible, temp link fallback |
 
 ---
