@@ -11,9 +11,28 @@ from pathlib import Path
 import mistune
 from mistune.plugins.math import math as math_plugin
 from mistune.plugins.table import table as table_plugin
+from pygments import highlight
+from pygments.formatters import HtmlFormatter
+from pygments.lexers import get_lexer_by_name, guess_lexer
+
+
+class _HighlightRenderer(mistune.HTMLRenderer):
+    def block_code(self, code: str, info: str | None = None) -> str:
+        lang = info.strip() if info else ""
+        if not lang:
+            return super().block_code(code, info)
+        try:
+            lexer = get_lexer_by_name(lang)
+        except Exception:
+            lexer = guess_lexer(code)
+        highlighted = highlight(code, lexer, HtmlFormatter(nowrap=True))
+        return f'<pre class="highlight"><code class="language-{lang}">{highlighted}</code></pre>\n'
+
+
+_PYGMENTS_CSS = HtmlFormatter(style="solarized-light").get_style_defs('.highlight')
 
 _md_renderer = mistune.create_markdown(
-    renderer=mistune.HTMLRenderer(),
+    renderer=_HighlightRenderer(),
     plugins=["strikethrough", "speedup", table_plugin, math_plugin],
 )
 
@@ -44,15 +63,16 @@ body { font-family: "Noto Sans", "Helvetica Neue", Arial, sans-serif; font-size:
 h1 { font-size: 1.8em; border-bottom: 2px solid #2563eb; padding-bottom: 0.3em; }
 h2 { font-size: 1.4em; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.2em; }
 h3 { font-size: 1.15em; }
-code { background: #f3f4f6; padding: 0.15em 0.3em; border-radius: 3px; font-size: 0.9em; }
-pre { background: #f8fafc; border: 1px solid #e5e7eb; padding: 0.8em; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word; }
-pre code { background: none; padding: 0; white-space: pre-wrap; word-wrap: break-word; }
+code { padding: 0.15em 0.3em; border-radius: 3px; font-size: 0.9em; }
+pre { border: 1px solid #e5e7eb; padding: 0.8em; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word; }
+pre code { padding: 0; white-space: pre-wrap; word-wrap: break-word; }
 table { border-collapse: collapse; width: 100%; margin: 1em 0; }
 th, td { border: 1px solid #d1d5db; padding: 0.5em 0.75em; text-align: left; }
 th { background: #f3f4f6; font-weight: 600; }
 img { max-width: 100%; height: auto; }
 blockquote { border-left: 3px solid #2563eb; margin-left: 0; padding-left: 1em; color: #555; }
 """
+
 
 
 def md_to_pdf(
@@ -80,10 +100,8 @@ def md_to_pdf(
     from weasyprint import HTML  # type: ignore[import-untyped]
 
     html_body = _md_renderer(_prepare_md(md_content))
-    if css_path:
-        css_text = css_path.read_text(encoding="utf-8")
-    else:
-        css_text = DEFAULT_CSS
+    extra_css = css_path.read_text(encoding="utf-8") if css_path else ""
+    css_text = DEFAULT_CSS + "\n" + _PYGMENTS_CSS + "\n" + extra_css
 
     title_html = ""
     if title:
