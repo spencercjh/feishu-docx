@@ -194,7 +194,6 @@ cython_debug/
 
 # project local files
 output/
-tests/
 
 # uv related
 uv.lock
