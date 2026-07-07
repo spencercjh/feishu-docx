@@ -161,7 +161,7 @@ feishu-docx export-workspace-schema <workspace_id> -o ./database_schema.md
 feishu-docx export-wechat "https://mp.weixin.qq.com/s/xxxxxx"
 
 # 导出为 PDF（需安装 weasyprint）
-pip install feishu-docx[pdf]
+pip install 'feishu-docx[pdf]'
 feishu-docx export "https://xxx.feishu.cn/docx/xxx" --pdf
 
 # 使用自定义品牌 CSS 模板导出 PDF

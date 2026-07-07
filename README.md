@@ -165,7 +165,7 @@ feishu-docx export-workspace-schema <workspace_id> -o ./database_schema.md
 feishu-docx export-wechat "https://mp.weixin.qq.com/s/xxxxxx"
 
 # Export with PDF (requires weasyprint)
-pip install feishu-docx[pdf]
+pip install 'feishu-docx[pdf]'
 feishu-docx export "https://xxx.feishu.cn/docx/xxx" --pdf
 
 # Export with company-branded PDF template
