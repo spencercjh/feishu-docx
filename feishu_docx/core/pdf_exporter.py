@@ -4,10 +4,31 @@
 [POS]: core module, markdown-to-PDF bridge
 """
 
+import re
 from datetime import date
 from pathlib import Path
 
 import mistune
+from mistune.plugins.math import math as math_plugin
+from mistune.plugins.table import table as table_plugin
+
+_md_renderer = mistune.create_markdown(
+    renderer=mistune.HTMLRenderer(),
+    plugins=["strikethrough", "speedup", table_plugin, math_plugin],
+)
+
+# ponytail: mistune rejects spaces in image src per CommonMark; wrap in <>
+_IMG_SRC_RE = re.compile(r"!\[([^]]*)]\(([^)]+)\)")
+
+
+def _prepare_md(md: str) -> str:
+    def _fix(m: re.Match) -> str:
+        alt, src = m.group(1), m.group(2)
+        if " " in src and not src.startswith(("<", "http://", "https://", "data:")):
+            return f"![{alt}](<{src}>)"
+        return m.group(0)
+
+    return _IMG_SRC_RE.sub(_fix, md)
 
 DEFAULT_CSS = """
 @page { size: A4; margin: 2.5cm 2cm; @bottom-center { content: counter(page); font-size: 9pt; color: #999; } }
@@ -40,6 +61,7 @@ def md_to_pdf(
     css_path: Path | None = None,
     title: str | None = None,
     logo_path: Path | None = None,
+    debug: bool = False,
 ) -> Path:
     """Convert markdown string to PDF using WeasyPrint.
 
@@ -49,6 +71,7 @@ def md_to_pdf(
         css_path: Optional path to a CSS file for branding; defaults to built-in styles.
         title: Optional document title for the cover page.
         logo_path: Optional path to an image (SVG/PNG) for the cover page header.
+        debug: If True, also write the intermediate HTML file alongside the PDF.
 
     Returns:
         The output_path that was written.
@@ -56,7 +79,7 @@ def md_to_pdf(
     # ponytail: lazy import so the CLI works without weasyprint installed
     from weasyprint import HTML  # type: ignore[import-untyped]
 
-    html_body = mistune.html(md_content)
+    html_body = _md_renderer(_prepare_md(md_content))
     if css_path:
         css_text = css_path.read_text(encoding="utf-8")
     else:
@@ -87,5 +110,11 @@ def md_to_pdf(
         f"{html_body}\n"
         "</body></html>"
     )
-    HTML(string=html).write_pdf(output_path)
+
+    if debug:
+        html_path = output_path.with_suffix(".html")
+        html_path.write_text(html, encoding="utf-8")
+
+    base_url = output_path.parent.resolve().as_uri()
+    HTML(string=html, base_url=base_url).write_pdf(output_path)
     return output_path

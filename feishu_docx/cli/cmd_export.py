@@ -119,6 +119,12 @@ def export(
             file_okay=True,
             dir_okay=False,
         ),
+        debug: bool = typer.Option(
+            False,
+            "--debug",
+            "-d",
+            help="调试模式，同时导出中间 HTML 文件",
+        ),
 ):
     """
     [green]▶[/] 导出飞书文档为 Markdown
@@ -192,6 +198,7 @@ def export(
                 pdf=pdf,
                 pdf_template=pdf_template,
                 pdf_logo=pdf_logo,
+                debug=debug,
             )
             console.print(Panel(f"✅ 导出完成: [green]{output_path}[/green]", border_style="green"))
 
@@ -321,6 +328,12 @@ def export_wiki_space(
             file_okay=True,
             dir_okay=False,
         ),
+        debug: bool = typer.Option(
+            False,
+            "--debug",
+            "-d",
+            help="调试模式，同时导出中间 HTML 文件",
+        ),
 ):
     """
     [green]▶[/] 批量导出知识空间下的所有文档
@@ -372,6 +385,7 @@ def export_wiki_space(
             pdf=pdf,
             pdf_template=pdf_template,
             pdf_logo=pdf_logo,
+            debug=debug,
         )
 
         # 输出统计

@@ -203,6 +203,7 @@ class FeishuExporter:
             pdf: bool = False,
             pdf_template: Optional[Path] = None,
             pdf_logo: Optional[Path] = None,
+            debug: bool = False,
     ) -> Path:
         """
         导出飞书文档为 Markdown 文件
@@ -263,7 +264,7 @@ class FeishuExporter:
             from .pdf_exporter import md_to_pdf
 
             pdf_path = output_dir / f"{output_filename}.pdf"
-            md_to_pdf(content, pdf_path, css_path=pdf_template, title=doc_title, logo_path=pdf_logo)
+            md_to_pdf(content, pdf_path, css_path=pdf_template, title=doc_title, logo_path=pdf_logo, debug=debug)
             if not silent:
                 console.print(f"[green]✓ PDF 导出:[/green] {pdf_path}")
 
@@ -537,6 +538,7 @@ class FeishuExporter:
             pdf: bool = False,
             pdf_template: Optional[Path] = None,
             pdf_logo: Optional[Path] = None,
+            debug: bool = False,
 
     ) -> dict:
         """
@@ -657,6 +659,7 @@ class FeishuExporter:
                                 pdf=pdf,
                                 pdf_template=pdf_template,
                                 pdf_logo=pdf_logo,
+                                debug=debug,
                             )
                             result["exported"] += 1
                             result["paths"].append(path)
@@ -690,6 +693,7 @@ class FeishuExporter:
                                 pdf=pdf,
                                 pdf_template=pdf_template,
                                 pdf_logo=pdf_logo,
+                                debug=debug,
                             )
                             result["exported"] += 1
                             result["paths"].append(path)
