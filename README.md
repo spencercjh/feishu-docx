@@ -156,10 +156,19 @@ This tool currently supports exporting the following Feishu/Lark document compon
 
 ### CLI
 
-`export-browser` requires Playwright:
+`export-browser` requires Playwright.
+
+If you installed via `uv tool install`, add Playwright as an extra dependency:
 
 ```bash
-uv pip install playwright  # or: pip install playwright
+uv tool install --with playwright feishu-docx
+playwright install chromium
+```
+
+If you are working inside a virtual environment:
+
+```bash
+pip install playwright
 playwright install chromium
 ```
 
