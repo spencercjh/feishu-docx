@@ -170,6 +170,9 @@ feishu-docx export "https://xxx.feishu.cn/docx/xxx" --pdf --pdf-template ./brand
 # 封面页添加 Logo
 feishu-docx export "https://xxx.feishu.cn/docx/xxx" --pdf --pdf-template ./brand.css --pdf-logo ./logo.svg
 
+# 使用代码高亮主题
+feishu-docx export "https://xxx.feishu.cn/docx/xxx" --pdf --syntax-style solarized-light
+
 # 抓取公众号文章并创建飞书文档
 feishu-docx create --url "https://mp.weixin.qq.com/s/xxxxxx"
 
@@ -215,6 +218,7 @@ path = exporter.export(
     pdf=True,
     pdf_template=Path("./brand.css"),
     pdf_logo=Path("./logo.svg"),
+    syntax_style="solarized-light",  # 可选 Pygments 代码高亮主题
 )
 
 # 在真实浏览器会话中导出公开文档或当前浏览器可读文档

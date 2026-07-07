@@ -17,6 +17,15 @@ from pygments.lexers import get_lexer_by_name, guess_lexer
 
 
 class _HighlightRenderer(mistune.HTMLRenderer):
+    """Renderer that applies Pygments syntax highlighting to code blocks.
+
+    `style` is the Pygments style name, or None for the default.
+    """
+
+    def __init__(self, style: str | None = None) -> None:
+        super().__init__()
+        self._fmt = HtmlFormatter(nowrap=True, style=style) if style else HtmlFormatter(nowrap=True)
+
     def block_code(self, code: str, info: str | None = None) -> str:
         lang = info.strip() if info else ""
         if not lang:
@@ -25,16 +34,20 @@ class _HighlightRenderer(mistune.HTMLRenderer):
             lexer = get_lexer_by_name(lang)
         except Exception:
             lexer = guess_lexer(code)
-        highlighted = highlight(code, lexer, HtmlFormatter(nowrap=True))
+        highlighted = highlight(code, lexer, self._fmt)
         return f'<pre class="highlight"><code class="language-{lang}">{highlighted}</code></pre>\n'
 
 
-_PYGMENTS_CSS = HtmlFormatter(style="solarized-light").get_style_defs('.highlight')
+def _make_md_renderer(syntax_style: str | None = None):
+    return mistune.create_markdown(
+        renderer=_HighlightRenderer(style=syntax_style),
+        plugins=["strikethrough", "speedup", table_plugin, math_plugin],
+    )
 
-_md_renderer = mistune.create_markdown(
-    renderer=_HighlightRenderer(),
-    plugins=["strikethrough", "speedup", table_plugin, math_plugin],
-)
+
+def _make_pygments_css(syntax_style: str | None = None) -> str:
+    fmt = HtmlFormatter(style=syntax_style) if syntax_style else HtmlFormatter()
+    return fmt.get_style_defs(".highlight")
 
 # ponytail: mistune rejects spaces in image src per CommonMark; wrap in <>
 _IMG_SRC_RE = re.compile(r"!\[([^]]*)]\(([^)]+)\)")
@@ -82,6 +95,7 @@ def md_to_pdf(
     title: str | None = None,
     logo_path: Path | None = None,
     debug: bool = False,
+    syntax_style: str | None = None,
 ) -> Path:
     """Convert markdown string to PDF using WeasyPrint.
 
@@ -92,6 +106,7 @@ def md_to_pdf(
         title: Optional document title for the cover page.
         logo_path: Optional path to an image (SVG/PNG) for the cover page header.
         debug: If True, also write the intermediate HTML file alongside the PDF.
+        syntax_style: Optional Pygments style name (e.g. "solarized-light"). Defaults to Pygments default.
 
     Returns:
         The output_path that was written.
@@ -99,9 +114,12 @@ def md_to_pdf(
     # ponytail: lazy import so the CLI works without weasyprint installed
     from weasyprint import HTML  # type: ignore[import-untyped]
 
-    html_body = _md_renderer(_prepare_md(md_content))
+    md_renderer = _make_md_renderer(syntax_style)
+    pygments_css = _make_pygments_css(syntax_style)
+
+    html_body = md_renderer(_prepare_md(md_content))
     extra_css = css_path.read_text(encoding="utf-8") if css_path else ""
-    css_text = DEFAULT_CSS + "\n" + _PYGMENTS_CSS + "\n" + extra_css
+    css_text = DEFAULT_CSS + "\n" + pygments_css + "\n" + extra_css
 
     title_html = ""
     if title:

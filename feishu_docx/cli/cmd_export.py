@@ -125,6 +125,11 @@ def export(
             "-d",
             help="调试模式，同时导出中间 HTML 文件",
         ),
+        syntax_style: Optional[str] = typer.Option(
+            None,
+            "--syntax-style",
+            help="Pygments 代码高亮主题（如 solarized-light），默认使用 Pygments 默认主题",
+        ),
 ):
     """
     [green]▶[/] 导出飞书文档为 Markdown
@@ -199,6 +204,7 @@ def export(
                 pdf_template=pdf_template,
                 pdf_logo=pdf_logo,
                 debug=debug,
+                syntax_style=syntax_style,
             )
             console.print(Panel(f"✅ 导出完成: [green]{output_path}[/green]", border_style="green"))
 
@@ -333,6 +339,11 @@ def export_wiki_space(
             "--debug",
             "-d",
             help="调试模式，同时导出中间 HTML 文件",
+        ),
+        syntax_style: Optional[str] = typer.Option(
+            None,
+            "--syntax-style",
+            help="Pygments 代码高亮主题（如 solarized-light），默认使用 Pygments 默认主题",
         ),
 ):
     """
