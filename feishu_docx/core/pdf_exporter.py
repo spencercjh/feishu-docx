@@ -115,6 +115,7 @@ def md_to_pdf(
         html_path = output_path.with_suffix(".html")
         html_path.write_text(html, encoding="utf-8")
 
-    base_url = output_path.parent.resolve().as_uri()
+    # ponytail: as_uri() strips trailing /; add it so relative paths resolve correctly
+    base_url = output_path.parent.resolve().as_uri() + "/"
     HTML(string=html, base_url=base_url).write_pdf(output_path)
     return output_path

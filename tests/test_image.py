@@ -1,3 +1,7 @@
+from pathlib import Path
+
+import pytest
+
 from feishu_docx.core.pdf_exporter import _prepare_md, _md_renderer
 
 
@@ -28,3 +32,21 @@ def test_image_already_bracketed_untouched():
 def test_image_http_untouched():
     html = _md_renderer(_prepare_md("![test](https://example.com/a b.png)"))
     assert "![test](https://example.com/a b.png)" in html
+
+
+def test_pdf_embeds_relative_image(tmp_path: Path):
+    pytest.importorskip("weasyprint", reason="weasyprint not installed")
+    from feishu_docx.core.pdf_exporter import md_to_pdf
+
+    asset_dir = tmp_path / "sub dir"
+    asset_dir.mkdir()
+    (asset_dir / "img.png").write_bytes(
+        b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x02\x00\x00\x00\x90wS\xde"
+        b"\x00\x00\x00\x0cIDATx\x9cc\xf8\x0f\x00\x00\x01\x01\x00\x05\x18\xd8N\x00\x00\x00\x00IEND\xaeB`\x82"
+    )
+
+    pdf_path = tmp_path / "out.pdf"
+    md_content = "![test](sub dir/img.png)"
+    md_to_pdf(md_content, pdf_path)
+
+    assert pdf_path.stat().st_size > 1000  # no-image PDF is ~700 bytes
