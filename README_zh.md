@@ -39,16 +39,60 @@
 - ☁️ **云空间管理** — 列文件、删文件、权限管理、批量清空
 - 🔐 **自动授权** — 一次授权，Token 自动刷新，告别手动管理
 - 🎨 **双重界面** — CLI 命令行 + TUI 终端图形界面，任君选择
-- 📦 **开箱即用** — `pip install` 即可使用，零配置开始导出
+- 📦 **安装简单** — `uv tool install feishu-docx` 或 `pip install feishu-docx`
 
 ---
 
 ## ⚡ 30秒快速开始
 
-```bash
-# 安装
-pip install feishu-docx
+### 安装
 
+推荐使用 `uv tool install`（隔离环境，不污染系统 Python）：
+
+```bash
+uv tool install feishu-docx
+```
+
+可选功能依赖单独安装，核心包保持轻量：
+
+```bash
+# PDF 导出：--pdf、--pdf-template、--pdf-logo、代码高亮
+uv tool install 'feishu-docx[pdf]'
+
+# 浏览器导出：export-browser
+uv tool install 'feishu-docx[browser]'
+playwright install chromium
+```
+
+也可以不安装直接运行：
+
+```bash
+uvx feishu-docx export "https://my.feishu.cn/wiki/xxx"
+```
+
+如果还没有安装 `uv`：`curl -LsSf https://astral.sh/uv/install.sh | sh`
+
+备选：`pip install`（适合虚拟环境，或显式使用 `--break-system-packages`）：
+
+```bash
+pip install feishu-docx
+```
+
+可选依赖也可以用 `pip` 安装：
+
+```bash
+pip install 'feishu-docx[pdf]'
+pip install 'feishu-docx[browser]'
+playwright install chromium
+```
+
+> 在 zsh 等 shell 中请保留引号，例如 `'feishu-docx[pdf]'`，否则 `[]` 可能会被当成 glob 匹配。
+
+> ⚠️ 在虚拟环境外直接 `pip install`，可能会在现代 Linux/macOS 上遇到 `externally-managed-environment`（PEP 668）。推荐使用虚拟环境或 `uv tool install`。
+
+### 配置并导出
+
+```bash
 # 配置凭证（只需一次）
 feishu-docx config set --app-id YOUR_APP_ID --app-secret YOUR_APP_SECRET
 
@@ -132,8 +176,17 @@ feishu-docx drive ls --type docx
 
 `export-browser` 依赖 Playwright：
 
+如果使用 `uv tool install` 安装，请安装 browser extra：
+
 ```bash
-pip install playwright
+uv tool install 'feishu-docx[browser]'
+playwright install chromium
+```
+
+如果在虚拟环境中使用：
+
+```bash
+pip install 'feishu-docx[browser]'
 playwright install chromium
 ```
 
@@ -160,8 +213,8 @@ feishu-docx export-workspace-schema <workspace_id> -o ./database_schema.md
 # 导出公众号文章为 Markdown
 feishu-docx export-wechat "https://mp.weixin.qq.com/s/xxxxxx"
 
-# 导出为 PDF（需安装 weasyprint）
-pip install 'feishu-docx[pdf]'
+# 导出为 PDF（需安装 pdf extra）
+uv tool install 'feishu-docx[pdf]'  # 或: pip install 'feishu-docx[pdf]'
 feishu-docx export "https://xxx.feishu.cn/docx/xxx" --pdf
 
 # 使用自定义品牌 CSS 模板导出 PDF
@@ -207,7 +260,7 @@ path = exporter.export("https://xxx.feishu.cn/wiki/xxx", "./output")
 # 获取文档内容（不保存文件）
 content = exporter.export_content("https://xxx.feishu.cn/docx/xxx")
 
-# 导出为 PDF（需执行: pip install 'feishu-docx[pdf]'）
+# 导出为 PDF（需执行: uv tool install 'feishu-docx[pdf]' 或 pip install 'feishu-docx[pdf]'）
 path = exporter.export("https://xxx.feishu.cn/docx/xxx", "./output", pdf=True)
 
 # 使用自定义品牌 CSS 模板导出 PDF

@@ -16,13 +16,23 @@ feishu-docx config set --app-id YOUR_APP_ID --app-secret YOUR_APP_SECRET
 
 > Token auto-refreshes. No user interaction required.
 
+Optional features are split into extras so the core install stays lightweight. Quote extras in zsh and similar shells.
+
 ### Optional: Browser-Based Export
 
 `export-browser` requires Playwright and a Chromium runtime:
 
 ```bash
-pip install playwright
+pip install 'feishu-docx[browser]'
 playwright install chromium
+```
+
+### Optional: PDF Export
+
+PDF export requires the `pdf` extra:
+
+```bash
+pip install 'feishu-docx[pdf]'
 ```
 
 ## Export Documents
@@ -58,6 +68,7 @@ feishu-docx export-browser "<FEISHU_OR_LARK_URL>" --storage-state ./storage_stat
 | Command | Description |
 |---------|-------------|
 | `feishu-docx export <URL>` | Export document to Markdown |
+| `feishu-docx export <URL> --pdf` | Export document to Markdown and PDF |
 | `feishu-docx export-browser <URL>` | Export in a real browser session with local assets |
 | `feishu-docx export-wechat <URL>` | Export WeChat article to Markdown |
 | `feishu-docx create <TITLE>` | Create new document |
@@ -94,6 +105,12 @@ feishu-docx export "https://xxx.feishu.cn/docx/XYZ789" -o ./docs -n meeting_note
 
 ```bash
 feishu-docx export-browser "https://xxx.larkoffice.com/wiki/ABC123" -o ./browser_docs
+```
+
+### Export a document as PDF
+
+```bash
+feishu-docx export "https://xxx.feishu.cn/docx/XYZ789" --pdf
 ```
 
 ### Read content directly (recommended for AI Agent)

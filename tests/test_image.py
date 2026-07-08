@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from feishu_docx.core.pdf_exporter import _prepare_md, _make_md_renderer
+from feishu_docx.core.pdf_exporter import _build_cover_html, _make_md_renderer, _prepare_md
 
 
 def _render(md: str) -> str:
@@ -33,6 +33,12 @@ def test_image_already_bracketed_untouched():
 def test_image_http_untouched():
     html = _render("![test](https://example.com/a b.png)")
     assert "![test](https://example.com/a b.png)" in html
+
+
+def test_cover_title_escapes_html():
+    html = _build_cover_html('A&B <Title> "quoted"')
+    assert "<h1>A&amp;B &lt;Title&gt; &quot;quoted&quot;</h1>" in html
+    assert '<h1>A&B <Title> "quoted"</h1>' not in html
 
 
 def test_pdf_embeds_relative_image(tmp_path: Path):

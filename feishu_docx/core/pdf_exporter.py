@@ -4,6 +4,7 @@
 [POS]: core module, markdown-to-PDF bridge
 """
 
+import html
 import re
 from datetime import date
 from pathlib import Path
@@ -49,6 +50,7 @@ def _make_pygments_css(syntax_style: str | None = None) -> str:
     fmt = HtmlFormatter(style=syntax_style) if syntax_style else HtmlFormatter()
     return fmt.get_style_defs(".highlight")
 
+
 # ponytail: mistune rejects spaces in image src per CommonMark; wrap in <>
 _IMG_SRC_RE = re.compile(r"!\[([^]]*)]\(([^)]+)\)")
 
@@ -61,6 +63,28 @@ def _prepare_md(md: str) -> str:
         return m.group(0)
 
     return _IMG_SRC_RE.sub(_fix, md)
+
+
+def _build_cover_html(title: str | None, logo_path: Path | None = None) -> str:
+    if not title:
+        return ""
+
+    today = date.today().isoformat()
+    logo_img = ""
+    if logo_path:
+        logo_src = logo_path.resolve().as_uri()
+        logo_img = f'<img class="cover-logo" src="{logo_src}" alt="logo">\n'
+
+    escaped_title = html.escape(title)
+    return (
+        f'<div class="cover-page">\n'
+        f"{logo_img}"
+        f"<h1>{escaped_title}</h1>\n"
+        f'<div class="rule"></div>\n'
+        f'<div class="meta">{today}</div>\n'
+        f"</div>\n"
+    )
+
 
 DEFAULT_CSS = """
 @page { size: A4; margin: 2.5cm 2cm; @bottom-center { content: counter(page); font-size: 9pt; color: #999; } }
@@ -85,7 +109,6 @@ th { background: #f3f4f6; font-weight: 600; }
 img { max-width: 100%; height: auto; }
 blockquote { border-left: 3px solid #2563eb; margin-left: 0; padding-left: 1em; color: #555; }
 """
-
 
 
 def md_to_pdf(
@@ -121,21 +144,7 @@ def md_to_pdf(
     extra_css = css_path.read_text(encoding="utf-8") if css_path else ""
     css_text = DEFAULT_CSS + "\n" + pygments_css + "\n" + extra_css
 
-    title_html = ""
-    if title:
-        today = date.today().isoformat()
-        logo_img = ""
-        if logo_path:
-            logo_src = logo_path.resolve().as_uri()
-            logo_img = f'<img class="cover-logo" src="{logo_src}" alt="logo">\n'
-        title_html = (
-            f'<div class="cover-page">\n'
-            f'{logo_img}'
-            f'<h1>{title}</h1>\n'
-            f'<div class="rule"></div>\n'
-            f'<div class="meta">{today}</div>\n'
-            f"</div>\n"
-        )
+    title_html = _build_cover_html(title, logo_path)
 
     html = (
         "<!DOCTYPE html>\n"

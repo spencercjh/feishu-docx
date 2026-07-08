@@ -54,6 +54,17 @@
 uv tool install feishu-docx
 ```
 
+Optional features are installed separately to keep the core package lightweight:
+
+```bash
+# PDF export: --pdf, --pdf-template, --pdf-logo, syntax highlighting
+uv tool install 'feishu-docx[pdf]'
+
+# Browser-based export: export-browser
+uv tool install 'feishu-docx[browser]'
+playwright install chromium
+```
+
 Or run directly without installing:
 
 ```bash
@@ -67,6 +78,16 @@ If you don't have `uv` yet: `curl -LsSf https://astral.sh/uv/install.sh | sh`
 ```bash
 pip install feishu-docx
 ```
+
+Optional extras also work with `pip`:
+
+```bash
+pip install 'feishu-docx[pdf]'
+pip install 'feishu-docx[browser]'
+playwright install chromium
+```
+
+> Quote extras such as `'feishu-docx[pdf]'` in shells like zsh, otherwise the `[]` may be treated as a glob pattern.
 
 > ⚠️ `pip install` outside a virtual environment may fail with `externally-managed-environment` on modern Linux/macOS (PEP 668). Use a virtual environment or `uv tool install` instead.
 
@@ -159,17 +180,17 @@ This tool currently supports exporting the following Feishu/Lark document compon
 
 `export-browser` requires Playwright.
 
-If you installed via `uv tool install`, add Playwright as an extra dependency:
+If you installed via `uv tool install`, install the browser extra:
 
 ```bash
-uv tool install --with playwright feishu-docx
+uv tool install 'feishu-docx[browser]'
 playwright install chromium
 ```
 
 If you are working inside a virtual environment:
 
 ```bash
-pip install playwright
+pip install 'feishu-docx[browser]'
 playwright install chromium
 ```
 
@@ -196,8 +217,8 @@ feishu-docx export-workspace-schema <workspace_id> -o ./database_schema.md
 # Export WeChat article to Markdown
 feishu-docx export-wechat "https://mp.weixin.qq.com/s/xxxxxx"
 
-# Export with PDF (requires weasyprint)
-pip install 'feishu-docx[pdf]'
+# Export with PDF (requires the pdf extra)
+uv tool install 'feishu-docx[pdf]'  # or: pip install 'feishu-docx[pdf]'
 feishu-docx export "https://xxx.feishu.cn/docx/xxx" --pdf
 
 # Export with company-branded PDF template
@@ -243,7 +264,7 @@ path = exporter.export("https://xxx.feishu.cn/wiki/xxx", "./output")
 # Get content without saving
 content = exporter.export_content("https://xxx.feishu.cn/docx/xxx")
 
-# Export with PDF (requires: pip install 'feishu-docx[pdf]')
+# Export with PDF (requires: uv tool install 'feishu-docx[pdf]' or pip install 'feishu-docx[pdf]')
 path = exporter.export("https://xxx.feishu.cn/docx/xxx", "./output", pdf=True)
 
 # Export with company-branded PDF template
