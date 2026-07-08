@@ -21,11 +21,11 @@
 
 ---
 
-## 🆕 最近重要更新（v0.2.6）
+## 🆕 最近重要更新（v0.2.7）
 
-- 新增 Add-ons Block 渲染支持
-- Sheet 导出支持富文本单元格，避免输出 Python list/dict 字符串
-- `export` / `export-wiki-space` 支持 `--sheet-value-mode`，可选择导出计算值或公式
+- PDF 导出支持自定义模板、封面 Logo 和可配置代码高亮主题
+- PDF 与浏览器导出依赖拆成可选安装：`feishu-docx[pdf]` 与 `feishu-docx[browser]`
+- PDF 封面标题渲染前会转义 HTML，避免原始 HTML 注入
 
 ---
 

@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.7] - 2026-07-08
+
+### Added
+- PDF 导出新增自定义 CSS 模板、封面 Logo 与可配置 Pygments 代码高亮主题支持
+- 新增 `pdf` 与 `browser` 可选依赖，PDF / 浏览器导出相关包可按需安装
+
+### Changed
+- README、README_zh 与 Skill 安装说明补充 PDF / 浏览器导出的可选依赖安装方式
+
+### Fixed
+- 修复 PDF 封面标题直接拼接 HTML 的问题，标题内容会在渲染前转义
+
 ## [0.2.6] - 2026-05-14
 
 ### Added

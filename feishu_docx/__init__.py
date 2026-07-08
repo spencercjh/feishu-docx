@@ -1,11 +1,10 @@
 # !/usr/bin/env python
-# -*- coding: utf-8 -*-
 # =====================================================
 # @File   ：__init__.py
 # @Date   ：2026/05/14 20:45
 # @Author ：leemysw
 # 2025/01/09 18:30   Create
-# 2026/05/14 20:45   Release v0.2.6
+# 2026/07/08 15:45   Release v0.2.7
 # =====================================================
 """
 [INPUT]: None
@@ -21,8 +20,8 @@ warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", message=".*pkg_resources.*")
 
-__version__ = "0.2.6"
+__version__ = "0.2.7"
 
-from feishu_docx.core.exporter import FeishuExporter
+from feishu_docx.core.exporter import FeishuExporter  # noqa: E402
 
 __all__ = ["__version__", "FeishuExporter"]

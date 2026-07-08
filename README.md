@@ -22,11 +22,11 @@
 
 ---
 
-## 🆕 Recent Updates (v0.2.6)
+## 🆕 Recent Updates (v0.2.7)
 
-- Added Add-ons Block rendering support
-- Sheet export now handles rich-text cells instead of emitting Python list/dict strings
-- `export` / `export-wiki-space` now support `--sheet-value-mode` for display values or formulas
+- PDF export now supports custom templates, cover logos, and configurable code highlighting themes
+- PDF and browser export dependencies are split into optional extras: `feishu-docx[pdf]` and `feishu-docx[browser]`
+- PDF cover titles are escaped before rendering to avoid injecting raw HTML
 
 ---
 
