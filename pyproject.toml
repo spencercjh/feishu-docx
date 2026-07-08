@@ -38,6 +38,7 @@ dependencies = [
 dev = ["pytest>=8.0", "ruff>=0.6", "mypy>=1.10"]
 pdf = [
     "weasyprint>=69.0",
+    "pygments>=2.20.0",
 ]
 
 [project.scripts]

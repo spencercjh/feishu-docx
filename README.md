@@ -206,6 +206,9 @@ feishu-docx export "https://xxx.feishu.cn/docx/xxx" --pdf --pdf-template ./brand
 # Export with logo on cover page
 feishu-docx export "https://xxx.feishu.cn/docx/xxx" --pdf --pdf-template ./brand.css --pdf-logo ./logo.svg
 
+# Export with syntax highlighting theme
+feishu-docx export "https://xxx.feishu.cn/docx/xxx" --pdf --syntax-style solarized-light
+
 # Fetch a WeChat article and create a Feishu doc
 feishu-docx create --url "https://mp.weixin.qq.com/s/xxxxxx"
 
@@ -251,6 +254,7 @@ path = exporter.export(
     pdf=True,
     pdf_template=Path("./brand.css"),
     pdf_logo=Path("./logo.svg"),
+    syntax_style="solarized-light",  # optional Pygments theme
 )
 
 # Export a public or browser-readable doc via a real browser session
