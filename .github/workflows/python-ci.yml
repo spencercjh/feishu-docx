@@ -108,7 +108,7 @@ jobs:
       - changes
       - lint
       - regression
-    if: needs.changes.outputs.python == 'true' && github.event_name != 'pull_request'
+    if: needs.changes.outputs.python == 'true'
     env:
       FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
       FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
@@ -175,7 +175,7 @@ jobs:
             fi
           done
 
-          if [[ "${{ github.event_name }}" != "pull_request" ]] && [[ "${{ needs.public-doc-e2e.result }}" != "success" ]]; then
+          if [[ "${{ needs.public-doc-e2e.result }}" != "success" ]]; then
             echo "public-doc-e2e did not complete successfully: ${{ needs.public-doc-e2e.result }}"
             exit 1
           fi
