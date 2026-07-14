@@ -244,7 +244,7 @@ def test_require_public_doc_export_prereqs_ready_fails_when_credentials_missing(
         pytest.fail.Exception,
         match="public doc export prerequisites missing: feishu-docx public doc export requires app credentials",
     ):
-        require_public_doc_export_prereqs_ready(case.SOURCE_DOC_REF)
+        require_public_doc_export_prereqs_ready(case.CANONICAL_DOC_REF)
 
 
 def test_require_public_doc_export_prereqs_ready_skips_when_credentials_missing_with_local_gate(
@@ -262,7 +262,7 @@ def test_require_public_doc_export_prereqs_ready_skips_when_credentials_missing_
         pytest.skip.Exception,
         match="public doc export prerequisites missing: feishu-docx public doc export requires app credentials",
     ):
-        require_public_doc_export_prereqs_ready(case.SOURCE_DOC_REF)
+        require_public_doc_export_prereqs_ready(case.CANONICAL_DOC_REF)
 
 
 def test_require_public_doc_export_prereqs_ready_fails_when_fitz_missing(monkeypatch):
@@ -283,7 +283,7 @@ def test_require_public_doc_export_prereqs_ready_fails_when_fitz_missing(monkeyp
         pytest.fail.Exception,
         match="public doc export prerequisites missing: PyMuPDF/fitz import failed: No module named 'fitz'",
     ):
-        require_public_doc_export_prereqs_ready(case.SOURCE_DOC_REF)
+        require_public_doc_export_prereqs_ready(case.CANONICAL_DOC_REF)
 
 
 @pytest.mark.e2e_public_doc

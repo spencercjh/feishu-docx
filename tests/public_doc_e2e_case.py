@@ -14,10 +14,11 @@ class FeaturePoint:
     pdf_forbid: tuple[str, ...] = ()
 
 
-# Provenance-only source doc. The canonical regression target is the Spencer-owned
-# personal-Drive copy below.
-SOURCE_DOC_REF = "https://www.feishu.cn/docx/IkCedJjFIoypyzxwXjacRSy9nBg"
-CANONICAL_DOC_REF = "https://www.feishu.cn/docx/RlZrd8hDoo4hGWxFHYjcCHwgnXb"
+# The live public-doc E2E only needs one Spencer-owned personal-Drive fixture.
+# A separate provenance-only source ref used to exist here, but it was not part of
+# the runtime export path and only made ownership / fixture governance harder to
+# reason about.
+CANONICAL_DOC_REF = "https://my.feishu.cn/wiki/IYBZwoUHBizZPPkFJTichjbNnXf"
 DOC_REF = os.environ.get("FEISHU_DOCX_PUBLIC_DOC_E2E_REF") or CANONICAL_DOC_REF
 
 LOCAL_SKIP_ENV = "FEISHU_DOCX_ALLOW_LOCAL_PUBLIC_DOC_SKIP"
