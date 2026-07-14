@@ -25,16 +25,19 @@ LOCAL_SKIP_ENV = "FEISHU_DOCX_ALLOW_LOCAL_PUBLIC_DOC_SKIP"
 FILE_STEM = "public-doc-e2e"
 MIN_PDF_TOTAL_IMAGES = 2
 
-# Fixture governance: Spencer owns the current canonical copy and the containing
-# personal-drive folder. Future fixture replacement should update this module and
-# the pinned snapshots in the same change.
+# Fixture governance: the current canonical fixture is Spencer-owned and published
+# as a public wiki node that unwraps to a docx. Future fixture replacement should
+# update this module and the pinned snapshots in the same change.
 FIXTURE_MAINTAINER = "spencer-cai"
-FIXTURE_FOLDER_NAME = "feishu-docx-public-fixtures"
-FIXTURE_FOLDER_TOKEN = "MVVpfLzYKlPLvfdMOP2chBM6nIe"
-FIXTURE_FOLDER_URL = "https://dynamia-ai.feishu.cn/drive/folder/MVVpfLzYKlPLvfdMOP2chBM6nIe"
+FIXTURE_WIKI_SPACE_ID = "7560658329514328092"
+FIXTURE_WIKI_NODE_TOKEN = "IYBZwoUHBizZPPkFJTichjbNnXf"
+FIXTURE_WIKI_URL = "https://my.feishu.cn/wiki/IYBZwoUHBizZPPkFJTichjbNnXf"
+FIXTURE_DOCX_TOKEN = "FKb0dJYJIoL9KQxFquMczZWenrh"
+FIXTURE_DOCX_URL = "https://www.feishu.cn/docx/FKb0dJYJIoL9KQxFquMczZWenrh"
 FIXTURE_REPLACEMENT_RULES = (
     "Keep the synced_block, markdown_table, markdown_blockquote, callout, whiteboard, and image signals equivalent.",
     "Refresh snapshots only after confirming the replacement doc preserves those feature points.",
+    "If the canonical fixture moves again, update the pinned wiki/docx governance tokens together with the snapshots.",
     "Update CANONICAL_DOC_REF together with any snapshot refresh in the same reviewable change.",
 )
 
