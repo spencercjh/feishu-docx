@@ -518,7 +518,7 @@ class DocumentParser:
                     if style.underline:
                         text = f"<u>{text}</u>"
                     if style.link:
-                        text = f"[{text}]({unquote(style.link.url)})"
+                        text = f"[{text}]({self._normalize_link_url(style.link.url)})"
             elif el.mention_user:
                 user_name = self.sdk.contact.get_user_name(el.mention_user.user_id, self.user_access_token)
                 text = f"@{user_name}"
@@ -532,6 +532,22 @@ class DocumentParser:
 
             result.append(text)
         return "".join(result)
+
+    @staticmethod
+    def _normalize_link_url(url: str | None) -> str:
+        raw_url = (url or "").strip()
+        if not raw_url:
+            return ""
+
+        parsed = urlparse(raw_url)
+        if parsed.scheme or parsed.netloc:
+            return raw_url
+
+        decoded_url = unquote(raw_url)
+        decoded = urlparse(decoded_url)
+        if decoded.scheme or decoded.netloc:
+            return decoded_url
+        return raw_url
 
     @staticmethod
     def _is_feishu_doc_url(url: str) -> bool:
@@ -584,7 +600,7 @@ class DocumentParser:
             as_block: bool = False,
     ) -> str:
         title = (block_title or "").strip()
-        link_url = unquote((url or "").strip())
+        link_url = self._normalize_link_url(url)
 
         if link_url:
             resolved_title = title or self._resolve_link_title(link_url) or link_url
