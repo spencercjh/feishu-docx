@@ -25,6 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       python: ${{ github.event_name != 'pull_request' || steps.filter.outputs.python == 'true' }}
+      public_doc_e2e: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
     steps:
       - uses: dorny/paths-filter@v4
         id: filter
@@ -108,7 +109,7 @@ jobs:
       - changes
       - lint
       - regression
-    if: needs.changes.outputs.python == 'true'
+    if: needs.changes.outputs.python == 'true' && needs.changes.outputs.public_doc_e2e == 'true'
     env:
       FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
       FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
@@ -175,7 +176,7 @@ jobs:
             fi
           done
 
-          if [[ "${{ needs.public-doc-e2e.result }}" != "success" ]]; then
+          if [[ "${{ needs.changes.outputs.public_doc_e2e }}" == "true" && "${{ needs.public-doc-e2e.result }}" != "success" ]]; then
             echo "public-doc-e2e did not complete successfully: ${{ needs.public-doc-e2e.result }}"
             exit 1
           fi
